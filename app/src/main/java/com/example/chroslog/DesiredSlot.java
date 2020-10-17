@@ -1,17 +1,16 @@
 package com.example.chroslog;
 
-public class DesiredSlot {
-    int year;
-    int month;
-    int day;
-    int hour;
-    int minute;
+import java.util.Calendar;
+import java.util.Date;
 
-    public DesiredSlot(int year, int month, int day, int hour, int minute) {
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        this.hour = hour;
-        this.minute = minute;
+public class DesiredSlot {
+    Calendar date;
+
+    public DesiredSlot(Calendar date) {
+        this.date = date;
     }
+
+    // Methode om availability the checken,
+    // mailen wanneer er een slot available is.
+    // Deze methode continue voor elk slot aanroepen in main.
 }

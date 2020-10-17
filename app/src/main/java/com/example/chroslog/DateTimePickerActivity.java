@@ -6,8 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -15,13 +13,14 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class DateTimePickerActivity extends AppCompatActivity
         implements View.OnClickListener {
 
     Button btnDatePicker, btnTimePicker;
     EditText txtDate, txtTime;
-    private int mYear, mMonth, mDay, mHour, mMinute;
+    private int currentYear, currentMonth, currentDay, currentHour, currentMinute;
     private int selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute;
 
     @Override
@@ -46,9 +45,9 @@ public class DateTimePickerActivity extends AppCompatActivity
 
             // Get Current Date
             final Calendar c = Calendar.getInstance();
-            mYear = c.get(Calendar.YEAR);
-            mMonth = c.get(Calendar.MONTH) + 1;
-            mDay = c.get(Calendar.DAY_OF_MONTH);
+            currentYear = c.get(Calendar.YEAR);
+            currentMonth = c.get(Calendar.MONTH);
+            currentDay = c.get(Calendar.DAY_OF_MONTH);
 
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(this,
@@ -64,15 +63,15 @@ public class DateTimePickerActivity extends AppCompatActivity
                             selectedDay = dayOfMonth;
 
                         }
-                    }, mYear, mMonth, mDay);
+                    }, currentYear, currentMonth, currentDay);
             datePickerDialog.show();
         }
         if (v == btnTimePicker) {
 
             // Get Current Time
             final Calendar c = Calendar.getInstance();
-            mHour = c.get(Calendar.HOUR_OF_DAY);
-            mMinute = c.get(Calendar.MINUTE);
+            currentHour = c.get(Calendar.HOUR_OF_DAY);
+            currentMinute = c.get(Calendar.MINUTE);
 
             // Launch Time Picker Dialog
             TimePickerDialog timePickerDialog = new TimePickerDialog(this,
@@ -86,21 +85,20 @@ public class DateTimePickerActivity extends AppCompatActivity
                             selectedHour = hourOfDay;
                             selectedMinute = minute;
                         }
-                    }, mHour, mMinute, false);
+                    }, currentHour, currentMinute, false);
             timePickerDialog.show();
         }
     }
 
     public void onCreateClick(View v){
-        // Create object/calender and put in list.
-        DesiredSlot newEntry = new DesiredSlot(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
+        // Create DesiredSlot object and put in list.
+        Calendar newDate = Calendar.getInstance();
+        newDate.set(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
+        DesiredSlot newEntry = new DesiredSlot(newDate);
         MainActivity.desiredSlots.add(newEntry);
 
-        // MainActivity.val = "gevuld";
+        // Then back to the main screen.
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-
-
-
     }
 }
