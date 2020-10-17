@@ -36,12 +36,11 @@ public class DisplayMessageActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.textView);
         textView.setText(message);
 
-        slot_api_call(message);
-
+        slots_api_call(message);
     }
 
     // Function does API call and writes output to textView2.
-    private void slot_api_call(final String time){
+    private void slots_api_call(final String time){
         final TextView textView2 = findViewById(R.id.textView2);
 
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -81,8 +80,8 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
         for (int i=0; i < response.length(); i++) {
             JSONObject slot = response.getJSONObject(i);
-            Object joe = slot.get("start_at");
-            if (joe.equals(formatted_date)) {
+            Object slot_date = slot.get("start_at");
+            if (slot_date.equals(formatted_date)) {
                 int spots = (int) slot.get("spots");
                 int spots_booked = (int) slot.get("spots_booked");
                 if (spots > spots_booked) {
@@ -94,7 +93,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
     }
 
     private String format_date(String datetime){
-        // WE ONLY NEED OUTPUT FORMAT WHEN WE HAVE AN ACTUAL DATE SELECTER
+        // WE ONLY NEED OUTPUT FORMAT WHEN WE HAVE AN ACTUAL DATE AS INPUT
         SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy'T'HH:mm");
         SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:00.000'+'02:00");
         Date date = null;
