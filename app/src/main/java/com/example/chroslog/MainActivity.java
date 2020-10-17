@@ -18,17 +18,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     public static List<DesiredSlot> desiredSlots = new ArrayList<DesiredSlot>();
 
-    String[] nameArray = {"Octopus","Pig","Sheep","Rabbit","Snake","Spider" };
-
-    String[] infoArray = {
-            "8 tentacled monster",
-            "Delicious in rolls",
-            "Great for jumpers",
-            "Nice in a stew",
-            "Great for shoes",
-            "Scary."
-    };
-
     ListView listView;
 
     @Override
@@ -43,15 +32,6 @@ public class MainActivity extends AppCompatActivity {
         );
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(whatever);
-
-        // List weergeven van alle slots + optie om een slot te verwijderen.
-//        for (int i = 0; i < MainActivity.desiredSlots.size(); i++){
-//            System.out.println(MainActivity.desiredSlots.get(i).year);
-//            System.out.println(MainActivity.desiredSlots.get(i).month);
-//            System.out.println(MainActivity.desiredSlots.get(i).day);
-//            System.out.println(MainActivity.desiredSlots.get(i).hour);
-//            System.out.println(MainActivity.desiredSlots.get(i).minute);
-//        }
     }
 
     private String[] firstLines(List<DesiredSlot> Slots){
@@ -80,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     /** Called when the user taps the Send button */
     public void sendMessage(View v) {
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
+        Intent intent = new Intent(MainActivity.this, DisplayMessageActivity.class);
         EditText editText = (EditText) findViewById(R.id.editText);
         String message = editText.getText().toString();
         intent.putExtra(EXTRA_MESSAGE, message);
@@ -89,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void showTimePicker(View v){
         DateTimePickerActivity newPicker = new DateTimePickerActivity();
-        Intent intent = new Intent(this, DateTimePickerActivity.class);
+        Intent intent = new Intent(MainActivity.this, DateTimePickerActivity.class);
         startActivity(intent);
     }
 }
