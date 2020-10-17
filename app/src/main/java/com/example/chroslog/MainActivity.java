@@ -15,9 +15,9 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     public static List<DesiredSlot> desiredSlots = new ArrayList<DesiredSlot>();
-
+    SimpleDateFormat firstLineFormat = new SimpleDateFormat("EEEE HH:mm");
+    SimpleDateFormat secondLineFormat = new SimpleDateFormat("dd MMMM yyyy");
     ListView listView;
 
     @Override
@@ -25,46 +25,43 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //CustomListAdapter whatever = new CustomListAdapter(this, nameArray, infoArray);
-        CustomListAdapter whatever = new CustomListAdapter(this,
-                firstLines(MainActivity.desiredSlots),
-                secondLines(MainActivity.desiredSlots)
+        CustomListAdapter listAdapter = new CustomListAdapter(this,
+                createDateLines(MainActivity.desiredSlots, firstLineFormat),
+                createDateLines(MainActivity.desiredSlots, secondLineFormat),
+                createAvailabilityLines(MainActivity.desiredSlots)
         );
         listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(whatever);
+        listView.setAdapter(listAdapter);
     }
 
-    private String[] firstLines(List<DesiredSlot> Slots){
-        SimpleDateFormat format = new SimpleDateFormat("EEEE HH:mm");
-        String[] firstLines = new String[Slots.size()];
+    // Format the calendar type into a nice string
+    private String[] createDateLines(List<DesiredSlot> Slots, SimpleDateFormat format){
+        String[] lines = new String[Slots.size()];
         for (int i = 0; i < MainActivity.desiredSlots.size(); i++){
             Calendar calendar = MainActivity.desiredSlots.get(i).date;
             Date date = calendar.getTime();
             String firstLine = format.format(date);
-            firstLines[i] = firstLine;
+            lines[i] = firstLine;
         }
-        return firstLines;
+        return lines;
     }
 
-    private String[] secondLines(List<DesiredSlot> Slots){
-        SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy");
-        String[] secondLines = new String[Slots.size()];
+    private String[] createAvailabilityLines(List<DesiredSlot> Slots){
+        String[] lines = new String[Slots.size()];
         for (int i = 0; i < MainActivity.desiredSlots.size(); i++){
-            Calendar calendar = MainActivity.desiredSlots.get(i).date;
-            Date date = calendar.getTime();
-            String secondLine = format.format(date);
-            secondLines[i] = secondLine;
+            boolean full = MainActivity.desiredSlots.get(i).full;
+            int slots_available = MainActivity.desiredSlots.get(i).slots_available;
+            if (full){
+                lines[i] = "full";
+            } else {
+                if (slots_available == 1){
+                    lines[i] = "1 slot available";
+                } else {
+                lines[i] = slots_available + " slots available";
+                }
+            }
         }
-        return secondLines;
-    }
-
-    /** Called when the user taps the Send button */
-    public void sendMessage(View v) {
-        Intent intent = new Intent(MainActivity.this, DisplayMessageActivity.class);
-        EditText editText = (EditText) findViewById(R.id.editText);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
+        return lines;
     }
 
     public void showTimePicker(View v){

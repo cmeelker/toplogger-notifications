@@ -12,14 +12,14 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="71dp"
+            android:layout_width="157dp"
+            android:layout_height="73dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/nameTextViewID"
+                android:id="@+id/firstLineText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView"
@@ -27,11 +27,20 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/infoTextViewID"
+                android:id="@+id/secondLineText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView"
                 android:textSize="18sp" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/availabilityText"
+            android:layout_width="44dp"
+            android:layout_height="73dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|end"
+            android:text="x slots available"
+            android:textSize="18sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
