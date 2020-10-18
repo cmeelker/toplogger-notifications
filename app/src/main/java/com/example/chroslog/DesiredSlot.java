@@ -16,17 +16,35 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+// Works in debug mode, so we just need to wait a bit somewhere??
+
+// Nadenken over refactor, waarbij slots_available niet telksens naar storage wordt geschreven,
+// Maar gewoon wordt berekend voor elk slot dat is de storage staat.
+// Zo hoeven we alleen een IO toe doen wanneer je een slot toevoegt.
 
 public class DesiredSlot {
     Calendar date;
-    int slots_available;
+    int slots_available = 99; // JUST TAKES THIS ONE, SLOTS_AVAILABLE IS NOT UPDATED...
 
     public DesiredSlot(Calendar date) {
         this.date = date;
     }
 
+    public static List<DesiredSlot> update_all_slots(Context context, final List<DesiredSlot> slots){
+        if (slots != null){
+            for (int i = 0; i < slots.size(); i++){
+                DesiredSlot new_slot = update_available_slots(context, slots.get(i));
+            }
+            // update storage file with new slot object
+            IOHelper.writeToStorage(context, slots);
+        }
+        return slots;
+    }
+
     // Function checks how many slots are available, and then updates the DesiredSlot Object
-    public static void update_available_slots(Context context, final DesiredSlot slot){
+    public static DesiredSlot update_available_slots(Context context, final DesiredSlot slot){
         String url = api_url(slot.date.getTime());
         RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -41,6 +59,7 @@ public class DesiredSlot {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
                     }
                 }, new Response.ErrorListener() {
 
@@ -51,9 +70,7 @@ public class DesiredSlot {
                 });
         queue.add(jsonArrayRequest);
 
-
-
-
+        return slot;
         // TO DO
         // Sends push message whenever full = false!
     }
@@ -69,7 +86,7 @@ public class DesiredSlot {
     private static int check_available_slots(JSONArray response, Date date) throws JSONException {
         SimpleDateFormat api_format_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:00.000'+'01:00");
         String time = api_format_time.format(date);
-        int available_slots = 99;
+        int available_slots = 88;
 
         for (int i=0; i < response.length(); i++) {
             JSONObject slot = response.getJSONObject(i);

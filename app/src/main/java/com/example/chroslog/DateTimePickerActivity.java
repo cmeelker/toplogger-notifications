@@ -4,7 +4,9 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,8 +14,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import com.google.gson.Gson;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class DateTimePickerActivity extends AppCompatActivity
         implements View.OnClickListener {
@@ -90,7 +97,7 @@ public class DateTimePickerActivity extends AppCompatActivity
         }
     }
 
-    public void onCreateClick(View v){
+    public void onCreateClick(View v) throws FileNotFoundException {
         // Create DesiredSlot object and put in list.
         Calendar newDate = Calendar.getInstance();
         newDate.set(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
@@ -98,7 +105,11 @@ public class DateTimePickerActivity extends AppCompatActivity
         // Create object, and update available_slots directly
         DesiredSlot newEntry = new DesiredSlot(newDate);
         DesiredSlot.update_available_slots(this, newEntry);
-        MainActivity.desiredSlots.add(newEntry);
+
+        // Get current list from storage, add our new entry and update storage
+        List<DesiredSlot> oldList = IOHelper.getFromStorage(this);
+        oldList.add(newEntry);
+        IOHelper.writeToStorage(this, oldList);
 
         // Then back to the main screen.
         Intent intent = new Intent(this, MainActivity.class);

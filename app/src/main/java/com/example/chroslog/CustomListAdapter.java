@@ -12,8 +12,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-// TODO: Add the full/slots_available array here
-
 public class CustomListAdapter extends ArrayAdapter {
 
     // To reference the Activity
@@ -43,9 +41,9 @@ public class CustomListAdapter extends ArrayAdapter {
         TextView availabilityField = (TextView) rowView.findViewById(R.id.availabilityText);
 
         // Create the actual lines from the data
-        String[] firstLines = createDateLines(MainActivity.desiredSlots, firstLineFormat);
-        String[] secondLines = createDateLines(MainActivity.desiredSlots, secondLineFormat);
-        String[] availability = createAvailabilityLines(MainActivity.desiredSlots);
+        String[] firstLines = createDateLines(slots, firstLineFormat);
+        String[] secondLines = createDateLines(slots, secondLineFormat);
+        String[] availability = createAvailabilityLines(slots);
 
         // This code sets the values of the objects to values from the arrays
         firstLineField.setText(firstLines[position]);
@@ -58,8 +56,8 @@ public class CustomListAdapter extends ArrayAdapter {
     // Format the calendar type into a nice string
     private String[] createDateLines(List<DesiredSlot> Slots, SimpleDateFormat format){
         String[] lines = new String[Slots.size()];
-        for (int i = 0; i < MainActivity.desiredSlots.size(); i++){
-            Calendar calendar = MainActivity.desiredSlots.get(i).date;
+        for (int i = 0; i < slots.size(); i++){
+            Calendar calendar = slots.get(i).date;
             Date date = calendar.getTime();
             String firstLine = format.format(date);
             lines[i] = firstLine;
@@ -69,8 +67,8 @@ public class CustomListAdapter extends ArrayAdapter {
 
     private String[] createAvailabilityLines(List<DesiredSlot> Slots){
         String[] lines = new String[Slots.size()];
-        for (int i = 0; i < MainActivity.desiredSlots.size(); i++){
-            int slots_available = MainActivity.desiredSlots.get(i).slots_available;
+        for (int i = 0; i < slots.size(); i++){
+            int slots_available = slots.get(i).slots_available;
             if (slots_available == 0){
                 lines[i] = "full";
             } else {
