@@ -7,48 +7,80 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 // TODO: Add the full/slots_available array here
 
 public class CustomListAdapter extends ArrayAdapter {
 
-    //to reference the Activity
+    // To reference the Activity
     private final Activity context;
 
-    // e.g. Sunday 12:00
-    private final String[] firstLines;
+    // The data for the list
+    private final List<DesiredSlot> slots;
 
-    // e.g. 18 October 2020
-    private final String[] secondLines;
+    SimpleDateFormat firstLineFormat = new SimpleDateFormat("EEEE HH:mm");      // Monday 19:00
+    SimpleDateFormat secondLineFormat = new SimpleDateFormat("dd MMMM yyyy");   // 18 October 2020
 
-    // either full or x slots available
-    private final String[] availability;
+    public CustomListAdapter(Activity context, List<DesiredSlot> slots){
 
-    public CustomListAdapter(Activity context, String[] firstLinesArray, String[] secondLinesArray, String[] availabilityArray){
-
-        super(context,R.layout.listview_row , firstLinesArray);
+        super(context,R.layout.listview_row , slots);
 
         this.context=context;
-        this.firstLines = firstLinesArray;
-        this.secondLines = secondLinesArray;
-        this.availability = availabilityArray;
-
+        this.slots = slots;
     };
 
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater=context.getLayoutInflater();
         View rowView=inflater.inflate(R.layout.listview_row, null,true);
 
-        //this code gets references to objects in the listview_row.xml file
+        // This code gets references to objects in the listview_row.xml file
         TextView firstLineField = (TextView) rowView.findViewById(R.id.firstLineText);
         TextView secondLineField = (TextView) rowView.findViewById(R.id.secondLineText);
         TextView availabilityField = (TextView) rowView.findViewById(R.id.availabilityText);
 
-        //this code sets the values of the objects to values from the arrays
+        // Create the actual lines from the data
+        String[] firstLines = createDateLines(MainActivity.desiredSlots, firstLineFormat);
+        String[] secondLines = createDateLines(MainActivity.desiredSlots, secondLineFormat);
+        String[] availability = createAvailabilityLines(MainActivity.desiredSlots);
+
+        // This code sets the values of the objects to values from the arrays
         firstLineField.setText(firstLines[position]);
         secondLineField.setText(secondLines[position]);
         availabilityField.setText(availability[position]);
 
         return rowView;
-
     };
+
+    // Format the calendar type into a nice string
+    private String[] createDateLines(List<DesiredSlot> Slots, SimpleDateFormat format){
+        String[] lines = new String[Slots.size()];
+        for (int i = 0; i < MainActivity.desiredSlots.size(); i++){
+            Calendar calendar = MainActivity.desiredSlots.get(i).date;
+            Date date = calendar.getTime();
+            String firstLine = format.format(date);
+            lines[i] = firstLine;
+        }
+        return lines;
+    }
+
+    private String[] createAvailabilityLines(List<DesiredSlot> Slots){
+        String[] lines = new String[Slots.size()];
+        for (int i = 0; i < MainActivity.desiredSlots.size(); i++){
+            int slots_available = MainActivity.desiredSlots.get(i).slots_available;
+            if (slots_available == 0){
+                lines[i] = "full";
+            } else {
+                if (slots_available == 1){
+                    lines[i] = "1 slot available";
+                } else {
+                    lines[i] = slots_available + " slots available";
+                }
+            }
+        }
+        return lines;
+    }
 }

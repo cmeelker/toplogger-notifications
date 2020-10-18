@@ -5,8 +5,7 @@ import java.util.Date;
 
 public class DesiredSlot {
     Calendar date;
-    boolean full = false;
-    int slots_available = 1;
+    int slots_available = 0;
 
     public DesiredSlot(Calendar date) {
         this.date = date;

@@ -85,7 +85,7 @@ public class DateTimePickerActivity extends AppCompatActivity
                             selectedHour = hourOfDay;
                             selectedMinute = minute;
                         }
-                    }, currentHour, currentMinute, false);
+                    }, currentHour, currentMinute, true);
             timePickerDialog.show();
         }
     }
