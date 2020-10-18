@@ -94,7 +94,10 @@ public class DateTimePickerActivity extends AppCompatActivity
         // Create DesiredSlot object and put in list.
         Calendar newDate = Calendar.getInstance();
         newDate.set(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
+
+        // Create object, and update available_slots directly
         DesiredSlot newEntry = new DesiredSlot(newDate);
+        DesiredSlot.update_available_slots(this, newEntry);
         MainActivity.desiredSlots.add(newEntry);
 
         // Then back to the main screen.

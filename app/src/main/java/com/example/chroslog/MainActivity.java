@@ -23,13 +23,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // desiredSlots = load internal storage/cache file
+        // when creating a slot, write new list to storage
+
+        // For each DesiredSlot in our list: update availability
+        for (int i = 0; i < MainActivity.desiredSlots.size(); i++){
+            DesiredSlot.update_available_slots(this, MainActivity.desiredSlots.get(i));
+        }
+
         CustomListAdapter listAdapter = new CustomListAdapter(this, MainActivity.desiredSlots);
 
-//        CustomListAdapter listAdapter = new CustomListAdapter(this,
-//                createDateLines(MainActivity.desiredSlots, firstLineFormat),
-//                createDateLines(MainActivity.desiredSlots, secondLineFormat),
-//                createAvailabilityLines(MainActivity.desiredSlots)
-//        );
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(listAdapter);
     }
