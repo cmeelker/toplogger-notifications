@@ -33,6 +33,7 @@ public class DesiredSlot {
     }
 
     public static List<DesiredSlot> update_all_slots(Context context, final List<DesiredSlot> slots){
+
         if (slots != null){
             for (int i = 0; i < slots.size(); i++){
                 DesiredSlot new_slot = update_available_slots(context, slots.get(i));
@@ -40,11 +41,17 @@ public class DesiredSlot {
             // update storage file with new slot object
             IOHelper.writeToStorage(context, slots);
         }
-        return slots;
+
+        // TO DO: HACKY DELAY SO IT WORKS
+        for (int i = 0; i < 1000; i++){
+            List<DesiredSlot> joe = IOHelper.getFromStorage(context);
+        }
+
+        return slots; // IF I PUT BREAKPOINT HERE IT WORKS! Maybe need AsyncTask?
     }
 
     // Function checks how many slots are available, and then updates the DesiredSlot Object
-    public static DesiredSlot update_available_slots(Context context, final DesiredSlot slot){
+    public static DesiredSlot update_available_slots(final Context context, final DesiredSlot slot){
         String url = api_url(slot.date.getTime());
         RequestQueue queue = Volley.newRequestQueue(context);
 
