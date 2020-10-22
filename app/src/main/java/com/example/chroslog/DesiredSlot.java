@@ -1,7 +1,16 @@
 package com.example.chroslog;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,14 +27,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-// Works in debug mode, so we just need to wait a bit somewhere??
-
-// Werken met keepLooking bool. Slots_available hoeft dan niet in de db en ook niet in het lijstje.
-
-// Nadenken over refactor, waarbij slots_available niet telksens naar storage wordt geschreven,
-// Maar gewoon wordt berekend voor elk slot dat is de storage staat.
-// Zo hoeven we alleen een IO toe doen wanneer je een slot toevoegt.
 
 public class DesiredSlot {
     Calendar date;
@@ -48,10 +49,13 @@ public class DesiredSlot {
                         // Process the request
                         try {
                             if (is_slot_available(response, slot.date.getTime())) {
-                                // Edit keeplooking in memory
+                                // Edit keepLooking in memory
                                 SharedPrefsHelper.editKeepLooking(context, i, false);
                                 Log.d("debugTag", "Send notification for");
-                                // Send pushmessage
+
+                                // Send push message!
+                                createNotification(context, slot);
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -66,8 +70,23 @@ public class DesiredSlot {
                     }
                 });
         queue.add(jsonArrayRequest);
-        // TO DO
-        // Sends push message whenever full = false!
+    }
+
+    private static void createNotification(Context context, DesiredSlot slot){
+        SimpleDateFormat notification_format = new SimpleDateFormat("EEEE dd MMM HH:mm"); // Monday
+        String date_string =  notification_format.format(slot.date.getTime());
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "sterk_channel")
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setContentTitle("Slot available at Sterk!")
+                .setContentText(date_string)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(date_string))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
+        notificationManager.notify(999, builder.build());
     }
 
     private static String api_url(Date date){
@@ -79,8 +98,7 @@ public class DesiredSlot {
 
     // This function reads the request, and return how many slots are available on our desired time.
     private static boolean is_slot_available(JSONArray response, Date date) throws JSONException {
-        // TO DO: FIX ZOMER WINTER TIJD
-        SimpleDateFormat api_format_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:00.000'+'01:00");
+        SimpleDateFormat api_format_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:00.000XXX");
         String time = api_format_time.format(date);
 
         for (int i=0; i < response.length(); i++) {
