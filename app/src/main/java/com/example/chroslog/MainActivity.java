@@ -40,16 +40,10 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("debugTag", "Back in Main");
 
+        createNotificationChannel();
+
         // Get our list from sharedPrefs
         List<DesiredSlot>  desiredSlots = SharedPrefsHelper.getFromSharedPrefs(this);
-
-        // For each slot in the list where keepLooking == true, check if there is an empty spot
-        // TO DO : WHILE LOOP, that runs every minute
-        for (int i = 0; i < desiredSlots.size(); i++){
-            if (desiredSlots.get(i).keepLooking){
-                DesiredSlot.do_api_call(this, desiredSlots.get(i), i);
-            }
-        }
 
         // Start the service which checks the API every x minutes
         Intent intent = new Intent(this, CheckSlotsService.class);
@@ -63,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "sterk_channel";
             String description = "sterk_channel";

@@ -22,7 +22,6 @@
                 android:id="@+id/firstLineText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
                 android:text="TextView"
                 android:textSize="24sp"
                 android:textStyle="bold" />
