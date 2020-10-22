@@ -51,35 +51,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
-
-        createNotificationChannel();
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "sterk_channel")
-                .setSmallIcon(R.drawable.ic_stat_name)
-                .setContentTitle("My notification")
-                .setContentText("Much longer text that cannot fit one line...")
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("What is this field"))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        // notificationId is a unique int for each notification that you must define
-
+        // Start the service which checks the API every x minutes
+        Intent intent = new Intent(this, CheckSlotsService.class);
+        startService(intent);
 
         setContentView(R.layout.activity_main);
-
-        if (desiredSlots.size() > 2){
-            notificationManager.notify(999, builder.build());
-        }
-
-
 
         CustomListAdapter listAdapter = new CustomListAdapter(this, desiredSlots);
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(listAdapter);
-
-
     }
 
     private void createNotificationChannel() {
