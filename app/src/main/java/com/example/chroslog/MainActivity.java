@@ -1,8 +1,13 @@
 package com.example.chroslog;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -26,24 +31,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        List<DesiredSlot> desiredSlots = new ArrayList<DesiredSlot>();
 
-        // Load slots file, update if storage isn't empty
-        List<DesiredSlot> slots_from_storage = IOHelper.getFromStorage(this);
-        if (slots_from_storage != null){
-            desiredSlots = slots_from_storage;
-        }
+        Log.d("debugTag", "Back in Main");
 
+        // Get our list from sharedPrefs
+        List<DesiredSlot>  desiredSlots = SharedPrefsHelper.getFromSharedPrefs(this);
+
+        // For each slot in the list where keepLooking == true, check if there is an empty spot
         // WHILE LOOP, that runs every minute
         for (int i = 0; i < desiredSlots.size(); i++){
             if (desiredSlots.get(i).keepLooking){
-                DesiredSlot.do_api_call(this, desiredSlots.get(i));
+                DesiredSlot.do_api_call(this, desiredSlots.get(i), i);
             }
         }
-
-        // for each slot in list
-        // if (keeplooking = True)
-        // do API call
 
         setContentView(R.layout.activity_main);
 

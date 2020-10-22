@@ -36,7 +36,7 @@ public class DesiredSlot {
     }
 
     // Function checks how many slots are available, and then updates the DesiredSlot Object
-    public static void do_api_call(final Context context, final DesiredSlot slot){
+    public static void do_api_call(final Context context, final DesiredSlot slot, final int i){
         String url = api_url(slot.date.getTime());
         RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -49,8 +49,8 @@ public class DesiredSlot {
                         try {
                             if (is_slot_available(response, slot.date.getTime())) {
                                 // Edit keeplooking in memory
-                                slot.keepLooking = false;
-                                Log.d("debugTag", "Send notification!");
+                                SharedPrefsHelper.editKeepLooking(context, i, false);
+                                Log.d("debugTag", "Send notification for");
                                 // Send pushmessage
                             }
                         } catch (JSONException e) {
