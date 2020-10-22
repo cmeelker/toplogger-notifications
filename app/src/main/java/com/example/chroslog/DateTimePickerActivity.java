@@ -104,13 +104,11 @@ public class DateTimePickerActivity extends AppCompatActivity
 
         // Create object, and update available_slots directly
         DesiredSlot newEntry = new DesiredSlot(newDate);
-        // DesiredSlot.update_available_slots(this, newEntry);
 
         // Get current list from storage, add our new entry and update storage
-        List<DesiredSlot> oldList = IOHelper.getFromStorage(this);
-        oldList.add(newEntry);
-        DesiredSlot.update_all_slots(this, oldList);
-        IOHelper.writeToStorage(this, oldList);
+        List<DesiredSlot> desiredSlots = IOHelper.getFromStorage(this);
+        desiredSlots.add(newEntry);
+        IOHelper.writeToStorage(this, desiredSlots);
 
         // Then back to the main screen.
         Intent intent = new Intent(this, MainActivity.class);

@@ -21,14 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    //public static List<DesiredSlot> desiredSlots = new ArrayList<DesiredSlot>();
     ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         List<DesiredSlot> desiredSlots = new ArrayList<DesiredSlot>();
-        setContentView(R.layout.activity_main);
 
         // Load slots file, update if storage isn't empty
         List<DesiredSlot> slots_from_storage = IOHelper.getFromStorage(this);
@@ -36,10 +34,20 @@ public class MainActivity extends AppCompatActivity {
             desiredSlots = slots_from_storage;
         }
 
-        // For each DesiredSlot in our list: update availability
-        List<DesiredSlot> new_slots = DesiredSlot.update_all_slots(this, desiredSlots);
+        // WHILE LOOP, that runs every minute
+        for (int i = 0; i < desiredSlots.size(); i++){
+            if (desiredSlots.get(i).keepLooking){
+                DesiredSlot.do_api_call(this, desiredSlots.get(i));
+            }
+        }
 
-        CustomListAdapter listAdapter = new CustomListAdapter(this, new_slots);
+        // for each slot in list
+        // if (keeplooking = True)
+        // do API call
+
+        setContentView(R.layout.activity_main);
+
+        CustomListAdapter listAdapter = new CustomListAdapter(this, desiredSlots);
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(listAdapter);
     }

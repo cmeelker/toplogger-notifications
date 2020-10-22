@@ -38,17 +38,14 @@ public class CustomListAdapter extends ArrayAdapter {
         // This code gets references to objects in the listview_row.xml file
         TextView firstLineField = (TextView) rowView.findViewById(R.id.firstLineText);
         TextView secondLineField = (TextView) rowView.findViewById(R.id.secondLineText);
-        TextView availabilityField = (TextView) rowView.findViewById(R.id.availabilityText);
 
         // Create the actual lines from the data
         String[] firstLines = createDateLines(slots, firstLineFormat);
         String[] secondLines = createDateLines(slots, secondLineFormat);
-        String[] availability = createAvailabilityLines(slots);
 
         // This code sets the values of the objects to values from the arrays
         firstLineField.setText(firstLines[position]);
         secondLineField.setText(secondLines[position]);
-        availabilityField.setText(availability[position]);
 
         return rowView;
     };
@@ -61,23 +58,6 @@ public class CustomListAdapter extends ArrayAdapter {
             Date date = calendar.getTime();
             String firstLine = format.format(date);
             lines[i] = firstLine;
-        }
-        return lines;
-    }
-
-    private String[] createAvailabilityLines(List<DesiredSlot> Slots){
-        String[] lines = new String[Slots.size()];
-        for (int i = 0; i < slots.size(); i++){
-            int slots_available = slots.get(i).slots_available;
-            if (slots_available == 0){
-                lines[i] = "full";
-            } else {
-                if (slots_available == 1){
-                    lines[i] = "1 slot available";
-                } else {
-                    lines[i] = slots_available + " slots available";
-                }
-            }
         }
         return lines;
     }

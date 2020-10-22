@@ -34,13 +34,5 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/availabilityText"
-            android:layout_width="44dp"
-            android:layout_height="73dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical|end"
-            android:text="x slots available"
-            android:textSize="18sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

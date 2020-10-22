@@ -1,6 +1,7 @@
 package com.example.chroslog;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,38 +21,22 @@ import java.util.List;
 
 // Works in debug mode, so we just need to wait a bit somewhere??
 
+// Werken met keepLooking bool. Slots_available hoeft dan niet in de db en ook niet in het lijstje.
+
 // Nadenken over refactor, waarbij slots_available niet telksens naar storage wordt geschreven,
 // Maar gewoon wordt berekend voor elk slot dat is de storage staat.
 // Zo hoeven we alleen een IO toe doen wanneer je een slot toevoegt.
 
 public class DesiredSlot {
     Calendar date;
-    int slots_available = 99; // JUST TAKES THIS ONE, SLOTS_AVAILABLE IS NOT UPDATED...
+    boolean keepLooking = true;
 
     public DesiredSlot(Calendar date) {
         this.date = date;
     }
 
-    public static List<DesiredSlot> update_all_slots(Context context, final List<DesiredSlot> slots){
-
-        if (slots != null){
-            for (int i = 0; i < slots.size(); i++){
-                DesiredSlot new_slot = update_available_slots(context, slots.get(i));
-            }
-            // update storage file with new slot object
-            IOHelper.writeToStorage(context, slots);
-        }
-
-        // TO DO: HACKY DELAY SO IT WORKS
-        for (int i = 0; i < 1000; i++){
-            List<DesiredSlot> joe = IOHelper.getFromStorage(context);
-        }
-
-        return slots; // IF I PUT BREAKPOINT HERE IT WORKS! Maybe need AsyncTask?
-    }
-
     // Function checks how many slots are available, and then updates the DesiredSlot Object
-    public static DesiredSlot update_available_slots(final Context context, final DesiredSlot slot){
+    public static void do_api_call(final Context context, final DesiredSlot slot){
         String url = api_url(slot.date.getTime());
         RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -62,7 +47,12 @@ public class DesiredSlot {
                     public void onResponse(JSONArray response) {
                         // Process the request
                         try {
-                            slot.slots_available = check_available_slots(response, slot.date.getTime());
+                            if (is_slot_available(response, slot.date.getTime())) {
+                                // Edit keeplooking in memory
+                                slot.keepLooking = false;
+                                Log.d("debugTag", "Send notification!");
+                                // Send pushmessage
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -76,8 +66,6 @@ public class DesiredSlot {
                     }
                 });
         queue.add(jsonArrayRequest);
-
-        return slot;
         // TO DO
         // Sends push message whenever full = false!
     }
@@ -90,10 +78,10 @@ public class DesiredSlot {
     }
 
     // This function reads the request, and return how many slots are available on our desired time.
-    private static int check_available_slots(JSONArray response, Date date) throws JSONException {
+    private static boolean is_slot_available(JSONArray response, Date date) throws JSONException {
+        // TO DO: FIX ZOMER WINTER TIJD
         SimpleDateFormat api_format_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:00.000'+'01:00");
         String time = api_format_time.format(date);
-        int available_slots = 88;
 
         for (int i=0; i < response.length(); i++) {
             JSONObject slot = response.getJSONObject(i);
@@ -102,13 +90,9 @@ public class DesiredSlot {
             if (slot_date.equals(time)) {
                 int spots = (int) slot.get("spots");
                 int spots_booked = (int) slot.get("spots_booked");
-                if (spots > spots_booked) {
-                    available_slots = spots - spots_booked;
-                } else {
-                    available_slots = 0;
-                }
+                return spots > spots_booked;
             }
         }
-        return available_slots;
+        return false;
     }
 }
