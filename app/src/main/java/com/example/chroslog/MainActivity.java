@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         CustomListAdapter listAdapter = new CustomListAdapter(this, desiredSlots);
+
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(listAdapter);
     }

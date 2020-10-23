@@ -1,10 +1,13 @@
 package com.example.chroslog;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -31,21 +34,36 @@ public class CustomListAdapter extends ArrayAdapter {
         this.slots = slots;
     };
 
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
         LayoutInflater inflater=context.getLayoutInflater();
-        View rowView=inflater.inflate(R.layout.listview_row, null,true);
+        final View rowView=inflater.inflate(R.layout.listview_row, null,true);
 
         // This code gets references to objects in the listview_row.xml file
-        TextView firstLineField = (TextView) rowView.findViewById(R.id.firstLineText);
+        final TextView firstLineField = (TextView) rowView.findViewById(R.id.firstLineText);
         TextView secondLineField = (TextView) rowView.findViewById(R.id.secondLineText);
 
         // Create the actual lines from the data
-        String[] firstLines = createDateLines(slots, firstLineFormat);
+        final String[] firstLines = createDateLines(slots, firstLineFormat);
         String[] secondLines = createDateLines(slots, secondLineFormat);
 
         // This code sets the values of the objects to values from the arrays
         firstLineField.setText(firstLines[position]);
         secondLineField.setText(secondLines[position]);
+
+        ImageView imageView = rowView.findViewById(R.id.deleteIcon);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Delete item from list in sharedPrefs
+                DesiredSlot.deleteSlot(getContext(), position);
+
+                // And delete from list the ArrayAdapter has
+                slots.remove(position);
+
+                // Reload list
+                notifyDataSetChanged();
+            }
+        });
 
         return rowView;
     };
