@@ -1,5 +1,7 @@
 package com.example.chroslog;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +33,18 @@ import java.util.TimerTask;
 public class CheckSlotsService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Intent notificationIntent = new Intent(this, CheckSlotsService.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+        Notification notification = new NotificationCompat.Builder(this, "sterk_channel")
+                .setContentTitle("I am checking Toplogger!")
+                .setContentText("This is a foreground service")
+                .setSmallIcon(R.drawable.checking_icon)
+                .setContentIntent(pendingIntent)
+                .build();
+
+        startForeground(4, notification);
+
         final Handler handler = new Handler();
         Timer timer = new Timer();
         TimerTask doAsynchronousTask = new TimerTask() {
@@ -41,6 +55,9 @@ public class CheckSlotsService extends Service {
                         Log.d("debugTag", "Checking API");
 
                         Context context = getApplication();
+
+//                        createPingNotification(context);
+
                         List<DesiredSlot> desiredSlots = SharedPrefsHelper.getFromSharedPrefs(context);
 
                         for (int i = 0; i < desiredSlots.size(); i++){
@@ -62,12 +79,27 @@ public class CheckSlotsService extends Service {
         return null;
     }
 
+    private void createPingNotification(Context context){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "sterk_channel")
+                .setSmallIcon(R.drawable.checking_icon)
+                .setContentTitle("I am still checking for you!")
+                .setContentText("...")
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("..."))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
+        // TO DO: This way we can only have one notification
+        notificationManager.notify(2, builder.build());
+    }
+
     private void createNotification(Context context, DesiredSlot slot){
-        SimpleDateFormat notification_format = new SimpleDateFormat("EEEE dd MMM HH:mm"); // Monday
+        SimpleDateFormat notification_format = new SimpleDateFormat("EEEE dd MMM HH:mm");
         String date_string =  notification_format.format(slot.date.getTime());
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "sterk_channel")
-                .setSmallIcon(R.drawable.ic_stat_name)
+                .setSmallIcon(R.drawable.mountain_icon)
                 .setContentTitle("Slot available at Sterk!")
                 .setContentText(date_string)
                 .setStyle(new NotificationCompat.BigTextStyle()
@@ -76,6 +108,7 @@ public class CheckSlotsService extends Service {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
+        // TO DO: This way we can only have one notification
         notificationManager.notify(1, builder.build());
     }
 
@@ -94,7 +127,7 @@ public class CheckSlotsService extends Service {
                             if (is_slot_available(response, slot.date.getTime())) {
                                 // Edit keepLooking in memory
                                 SharedPrefsHelper.editKeepLooking(context, i, false);
-                                Log.d("debugTag", "Send notification for");
+                                Log.d("debugTag", "Send notification");
 
                                 // Send push message!
                                 createNotification(context, slot);
