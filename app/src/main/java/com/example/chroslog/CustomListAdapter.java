@@ -3,6 +3,8 @@ package com.example.chroslog;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,14 +43,19 @@ public class CustomListAdapter extends ArrayAdapter {
         // This code gets references to objects in the listview_row.xml file
         final TextView firstLineField = (TextView) rowView.findViewById(R.id.firstLineText);
         TextView secondLineField = (TextView) rowView.findViewById(R.id.secondLineText);
+        ImageView checkboxField = rowView.findViewById(R.id.checkImage);
 
         // Create the actual lines from the data
         final String[] firstLines = createDateLines(slots, firstLineFormat);
         String[] secondLines = createDateLines(slots, secondLineFormat);
 
+        // Create list of images
+        int[] images = createImagesList(slots);
+
         // This code sets the values of the objects to values from the arrays
         firstLineField.setText(firstLines[position]);
         secondLineField.setText(secondLines[position]);
+        checkboxField.setImageResource(images[position]);
 
         ImageView imageView = rowView.findViewById(R.id.deleteIcon);
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -68,9 +75,23 @@ public class CustomListAdapter extends ArrayAdapter {
         return rowView;
     };
 
+    private int[] createImagesList(List<DesiredSlot> slots){
+        int[] list = new int[slots.size()];
+        for (int i = 0; i < slots.size(); i++){
+            int image;
+            if (slots.get(i).keepLooking == true) {
+                image = R.drawable.empty_check;
+            } else {
+                image = R.drawable.check;
+            }
+            list[i] = image;
+        }
+        return list;
+    }
+
     // Format the calendar type into a nice string
-    private String[] createDateLines(List<DesiredSlot> Slots, SimpleDateFormat format){
-        String[] lines = new String[Slots.size()];
+    private String[] createDateLines(List<DesiredSlot> slots, SimpleDateFormat format){
+        String[] lines = new String[slots.size()];
         for (int i = 0; i < slots.size(); i++){
             Calendar calendar = slots.get(i).date;
             Date date = calendar.getTime();

@@ -1,5 +1,6 @@
 package com.example.chroslog;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,9 +11,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.google.gson.Gson;
@@ -26,7 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class DateTimePickerActivity extends AppCompatActivity
+public class DateTimePickerActivity extends Activity
         implements View.OnClickListener {
 
     Button btnDatePicker, btnTimePicker;
@@ -46,7 +49,6 @@ public class DateTimePickerActivity extends AppCompatActivity
 
         btnDatePicker.setOnClickListener(this);
         btnTimePicker.setOnClickListener(this);
-
     }
 
     @Override

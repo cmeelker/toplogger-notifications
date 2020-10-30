@@ -8,31 +8,33 @@
 
     <Button
         android:id="@+id/button3"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginBottom="16dp"
+        android:background="@color/colorPrimaryDark"
+        android:drawableRight="@drawable/ic_logo_header_wide"
+        android:drawablePadding="20dp"
+        android:paddingRight="40dp"
         android:onClick="showTimePicker"
         android:text="@string/button_create"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ListView
         android:id="@+id/listView"
-        android:layout_width="366dp"
-        android:layout_height="582dp"
+        android:layout_width="375dp"
+        android:layout_height="661dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="60dp"
         app:layout_constraintBottom_toTopOf="@+id/button3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.071" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
