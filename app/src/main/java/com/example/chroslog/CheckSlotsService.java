@@ -100,7 +100,7 @@ public class CheckSlotsService extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "sterk_channel")
                 .setSmallIcon(R.drawable.mountain_icon)
-                .setContentTitle("Slot available at Sterk!")
+                .setContentTitle("Slot available at Energiehaven!")
                 .setContentText(date_string)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(date_string))
@@ -151,7 +151,11 @@ public class CheckSlotsService extends Service {
     private String api_url(Date date){
         SimpleDateFormat api_format_date = new SimpleDateFormat("yyyy-MM-dd"); // 2020-10-15
         String date_string =  api_format_date.format(date);
-        String url = "https://api.toplogger.nu/v1/gyms/20/slots?date=" + date_string + "&reservation_area_id=4&slim=true";
+        // Gym 20 = Sterk, Gym 11 = EH
+        // Reservation_area = 4 voor sterk, 15 voor EH, 67 voor buiten EH
+        String gym = "11";
+        String reservation_area = "67";
+        String url = "https://api.toplogger.nu/v1/gyms/" + gym + "/slots?date=" + date_string + "&reservation_area_id=" + reservation_area + "&slim=true";
         return url;
     }
 

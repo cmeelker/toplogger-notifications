@@ -17,7 +17,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class CustomListAdapter extends ArrayAdapter {
+public class CustomListAdapterHome extends ArrayAdapter {
 
     // To reference the Activity
     private final Activity context;
@@ -28,7 +28,7 @@ public class CustomListAdapter extends ArrayAdapter {
     SimpleDateFormat firstLineFormat = new SimpleDateFormat("EEEE HH:mm");      // Monday 19:00
     SimpleDateFormat secondLineFormat = new SimpleDateFormat("dd MMMM yyyy");   // 18 October 2020
 
-    public CustomListAdapter(Activity context, List<DesiredSlot> slots){
+    public CustomListAdapterHome(Activity context, List<DesiredSlot> slots){
 
         super(context,R.layout.listview_row , slots);
 
