@@ -17,6 +17,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 // This class is needed to
@@ -53,9 +55,27 @@ public class SharedPrefsHelper {
 
         // If sharedPrefs if NOT empty, we will use that list
         if (sharedPrefsList != null){
-            desiredSlots = sharedPrefsList;
+            // Remove slots that are in the past
+            List<DesiredSlot> cleaned_slots = removeOldSlots(sharedPrefsList);
+            desiredSlots = cleaned_slots;
+
+            // Write new list to shared prefs
+            SharedPrefsHelper.writeToSharedPrefs(context, cleaned_slots);
         }
 
+        return desiredSlots;
+    }
+
+    static private List<DesiredSlot> removeOldSlots(List<DesiredSlot> desiredSlots){
+        for (int i=0; i < desiredSlots.size(); i++) {
+            DesiredSlot slot = desiredSlots.get(i);
+            Calendar calendar = Calendar.getInstance();
+            Date today_date = calendar.getTime();
+
+            if (today_date.after(slot.start_date)){
+                desiredSlots.remove(i);
+            }
+        }
         return desiredSlots;
     }
 

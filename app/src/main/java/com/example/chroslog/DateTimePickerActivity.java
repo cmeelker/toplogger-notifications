@@ -50,8 +50,7 @@ public class DateTimePickerActivity extends Activity {
         final Calendar calendar = Calendar.getInstance();
 
         // Create list of all slots that exists on that date
-        existingSlots = listExistingSlots(calendar);
-
+        existingSlots = listExistingSlots(calendar.getTime());
         displayListView();
 
         // Set change listener for calendar
@@ -61,7 +60,7 @@ public class DateTimePickerActivity extends Activity {
                                                  public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                                                      calendar.set(year, month, dayOfMonth);
                                                      Log.d("debugTag", "selected date: " + calendar.getTime());
-                                                     existingSlots = listExistingSlots(calendar);
+                                                     existingSlots = listExistingSlots(calendar.getTime());
                                                      displayListView();
                                                  }
                                              });
@@ -70,7 +69,7 @@ public class DateTimePickerActivity extends Activity {
     }
 
     private void displayListView(){
-        // Create an ArrayAdaptar from the slots Array
+        // Create an ArrayAdapter from the slots Array
         dataAdapter = new MyCustomAdapter(this,
                 R.layout.checkbox_item, existingSlots);
         ListView listView = (ListView) findViewById(R.id.listView);
@@ -79,21 +78,9 @@ public class DateTimePickerActivity extends Activity {
         listView.setAdapter(dataAdapter);
     }
 
-    private String api_url(Calendar calender){
-        SimpleDateFormat api_format_date = new SimpleDateFormat("yyyy-MM-dd"); // 2020-10-15
-        Date date = calender.getTime();
-        String date_string =  api_format_date.format(date);
-        // Gym 20 = Sterk, Gym 11 = EH
-        // Reservation_area = 4 voor sterk, 15 voor EH, 67 voor buiten EH
-        String gym = "11";
-        String reservation_area = "67";
-        String url = "https://api.toplogger.nu/v1/gyms/" + gym + "/slots?date=" + date_string + "&reservation_area_id=" + reservation_area + "&slim=true";
-        return url;
-    }
-
-    public ArrayList<SelectableSlot> listExistingSlots(Calendar date){
+    private ArrayList<SelectableSlot> listExistingSlots(Date date){
         final ArrayList<SelectableSlot> existing_slots = new ArrayList<SelectableSlot>();
-        String url = api_url(date);
+        String url = APIHelper.create_api_url(date);
 
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -181,9 +168,9 @@ public class DateTimePickerActivity extends Activity {
     private void addNewDesiredSlots(ArrayList<SelectableSlot> selectedSlots){
         for(int i = 0; i< selectedSlots.size(); i++){
             SelectableSlot slot = selectedSlots.get(i);
-
             DesiredSlot newEntry = new DesiredSlot(slot.start_date, slot.end_date);
 
+            // Get current list
             List<DesiredSlot> desiredSlots = SharedPrefsHelper.getFromSharedPrefs(this);
 
             // Add our new entry

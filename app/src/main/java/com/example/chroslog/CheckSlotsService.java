@@ -97,7 +97,7 @@ public class CheckSlotsService extends Service {
 
     // Function checks how many slots are available, and then updates the DesiredSlot Object
     public void do_api_call(final Context context, final DesiredSlot slot, final int i){
-        String url = api_url(slot.start_date);
+        String url = APIHelper.create_api_url(slot.start_date);
         RequestQueue queue = Volley.newRequestQueue(context);
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
@@ -131,17 +131,6 @@ public class CheckSlotsService extends Service {
         queue.add(jsonArrayRequest);
     }
 
-    private String api_url(Date date){
-        SimpleDateFormat api_format_date = new SimpleDateFormat("yyyy-MM-dd"); // 2020-10-15
-        String date_string =  api_format_date.format(date);
-        // Gym 20 = Sterk, Gym 11 = EH
-        // Reservation_area = 4 voor sterk, 15 voor EH, 67 voor buiten EH
-        String gym = "11";
-        String reservation_area = "67";
-        String url = "https://api.toplogger.nu/v1/gyms/" + gym + "/slots?date=" + date_string + "&reservation_area_id=" + reservation_area + "&slim=true";
-        return url;
-    }
-
     // This function reads the request, and return how many slots are available on our desired time.
     private boolean is_slot_available(JSONArray response, Date date) throws JSONException {
         SimpleDateFormat api_format_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:00.000XXX");
@@ -150,7 +139,7 @@ public class CheckSlotsService extends Service {
         for (int i=0; i < response.length(); i++) {
             JSONObject slot = response.getJSONObject(i);
             Object slot_date = slot.get("start_at");
-            // Misschien kunnen we de json regel rechtstreeks krijgen ipv if statement
+
             if (slot_date.equals(time)) {
                 int spots = (int) slot.get("spots");
                 int spots_booked = (int) slot.get("spots_booked");
