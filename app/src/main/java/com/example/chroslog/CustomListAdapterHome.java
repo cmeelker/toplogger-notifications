@@ -1,10 +1,6 @@
 package com.example.chroslog;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +58,7 @@ public class CustomListAdapterHome extends ArrayAdapter {
             @Override
             public void onClick(View v) {
                 // Delete item from list in sharedPrefs
-                DesiredSlot.deleteSlot(getContext(), position);
+                DesiredSlot.deleteSlotFromSharedPrefs(getContext(), position);
 
                 // And delete from list the ArrayAdapter has
                 slots.remove(position);
@@ -89,12 +85,11 @@ public class CustomListAdapterHome extends ArrayAdapter {
         return list;
     }
 
-    // Format the calendar type into a nice string
+    // Format the date type into a nice string
     private String[] createDateLines(List<DesiredSlot> slots, SimpleDateFormat format){
         String[] lines = new String[slots.size()];
         for (int i = 0; i < slots.size(); i++){
-            Calendar calendar = slots.get(i).date;
-            Date date = calendar.getTime();
+            Date date = slots.get(i).start_date;
             String firstLine = format.format(date);
             lines[i] = firstLine;
         }

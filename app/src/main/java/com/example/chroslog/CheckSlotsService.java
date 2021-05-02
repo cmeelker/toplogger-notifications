@@ -36,7 +36,7 @@ public class CheckSlotsService extends Service {
         Intent notificationIntent = new Intent(this, CheckSlotsService.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
-        Notification notification = new NotificationCompat.Builder(this, "sterk_channel")
+        Notification notification = new NotificationCompat.Builder(this, "roggelpot_channel")
                 .setContentTitle("I am checking Toplogger!")
                 .setContentText("This is a foreground service")
                 .setSmallIcon(R.drawable.checking_icon)
@@ -55,8 +55,6 @@ public class CheckSlotsService extends Service {
                         Log.d("debugTag", "Checking API");
 
                         Context context = getApplication();
-
-//                        createPingNotification(context);
 
                         List<DesiredSlot> desiredSlots = SharedPrefsHelper.getFromSharedPrefs(context);
 
@@ -79,26 +77,11 @@ public class CheckSlotsService extends Service {
         return null;
     }
 
-    private void createPingNotification(Context context){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "sterk_channel")
-                .setSmallIcon(R.drawable.checking_icon)
-                .setContentTitle("I am still checking for you!")
-                .setContentText("...")
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("..."))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-
-        // TO DO: This way we can only have one notification
-        notificationManager.notify(2, builder.build());
-    }
-
     private void createNotification(Context context, DesiredSlot slot){
         SimpleDateFormat notification_format = new SimpleDateFormat("EEEE dd MMM HH:mm");
-        String date_string =  notification_format.format(slot.date.getTime());
+        String date_string =  notification_format.format(slot.start_date.getTime());
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "sterk_channel")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "roggelpot_channel")
                 .setSmallIcon(R.drawable.mountain_icon)
                 .setContentTitle("Slot available at Energiehaven!")
                 .setContentText(date_string)
@@ -114,7 +97,7 @@ public class CheckSlotsService extends Service {
 
     // Function checks how many slots are available, and then updates the DesiredSlot Object
     public void do_api_call(final Context context, final DesiredSlot slot, final int i){
-        String url = api_url(slot.date.getTime());
+        String url = api_url(slot.start_date);
         RequestQueue queue = Volley.newRequestQueue(context);
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
@@ -124,7 +107,7 @@ public class CheckSlotsService extends Service {
                     public void onResponse(JSONArray response) {
                         // Process the request
                         try {
-                            if (is_slot_available(response, slot.date.getTime())) {
+                            if (is_slot_available(response, slot.start_date)) {
                                 // Edit keepLooking in memory
                                 SharedPrefsHelper.editKeepLooking(context, i, false);
                                 Log.d("debugTag", "Send notification");

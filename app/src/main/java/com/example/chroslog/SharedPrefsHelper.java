@@ -46,6 +46,7 @@ public class SharedPrefsHelper {
 
         // Get sharedPrefs
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+
         String json = sharedPref.getString("desired_slots","");
         Gson gson = new Gson();
         List<DesiredSlot> sharedPrefsList = gson.fromJson(json, listType);

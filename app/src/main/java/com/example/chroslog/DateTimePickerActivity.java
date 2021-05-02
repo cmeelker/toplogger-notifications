@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -23,8 +22,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -37,12 +34,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class DateTimePickerActivity extends Activity {
 
     MyCustomAdapter dataAdapter = null;
-    ArrayList<Slot> existingSlots = new ArrayList<Slot>();
+    ArrayList<SelectableSlot> existingSlots = new ArrayList<SelectableSlot>();
 
 
     @Override
@@ -95,8 +91,8 @@ public class DateTimePickerActivity extends Activity {
         return url;
     }
 
-    public ArrayList<Slot> listExistingSlots(Calendar date){
-        final ArrayList<Slot> existing_slots = new ArrayList<Slot>();
+    public ArrayList<SelectableSlot> listExistingSlots(Calendar date){
+        final ArrayList<SelectableSlot> existing_slots = new ArrayList<SelectableSlot>();
         String url = api_url(date);
 
         // Instantiate the RequestQueue.
@@ -121,7 +117,7 @@ public class DateTimePickerActivity extends Activity {
                                 Log.d("debugTag", "start date is: "+ start_date.toString());
 
                                 // Create slot object and add to list
-                                Slot new_slot = new Slot(start_date, end_date, false);
+                                SelectableSlot new_slot = new SelectableSlot(start_date, end_date);
 
                                 // SOMETHING GOES WRONG HERE? VARIABLE STAYS EMPTY
                                 existing_slots.add(i, new_slot);
@@ -151,9 +147,9 @@ public class DateTimePickerActivity extends Activity {
 
 
     public void selectAll(View v){
-        ArrayList<Slot> slotList = dataAdapter.slotList;
+        ArrayList<SelectableSlot> slotList = dataAdapter.slotList;
         for(int i = 0; i< slotList.size(); i++){
-            Slot slot = slotList.get(i);
+            SelectableSlot slot = slotList.get(i);
             slot.setSelected(true);
         }
 
@@ -166,11 +162,11 @@ public class DateTimePickerActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                ArrayList<Slot> selectedSlots = new ArrayList<Slot>();
+                ArrayList<SelectableSlot> selectedSlots = new ArrayList<SelectableSlot>();
 
-                ArrayList<Slot> slotList = dataAdapter.slotList;
+                ArrayList<SelectableSlot> slotList = dataAdapter.slotList;
                 for(int i = 0; i< slotList.size(); i++){
-                    Slot slot = slotList.get(i);
+                    SelectableSlot slot = slotList.get(i);
                     if(slot.isSelected()){
                         selectedSlots.add(slot);
                     }
@@ -182,12 +178,11 @@ public class DateTimePickerActivity extends Activity {
         });
     }
 
-    private void addNewDesiredSlots(ArrayList<Slot> selectedSlots){
+    private void addNewDesiredSlots(ArrayList<SelectableSlot> selectedSlots){
         for(int i = 0; i< selectedSlots.size(); i++){
-            Slot slot = selectedSlots.get(i);
-            Calendar start_calendar = slot.get_start_calendar();
+            SelectableSlot slot = selectedSlots.get(i);
 
-            DesiredSlot newEntry = new DesiredSlot(start_calendar);
+            DesiredSlot newEntry = new DesiredSlot(slot.start_date, slot.end_date);
 
             List<DesiredSlot> desiredSlots = SharedPrefsHelper.getFromSharedPrefs(this);
 
@@ -204,14 +199,14 @@ public class DateTimePickerActivity extends Activity {
     }
 
 
-    private class MyCustomAdapter extends ArrayAdapter<Slot> {
+    private class MyCustomAdapter extends ArrayAdapter<SelectableSlot> {
 
-        private ArrayList<Slot> slotList;
+        private ArrayList<SelectableSlot> slotList;
 
         public MyCustomAdapter(Context context, int textViewResourceId,
-                               ArrayList<Slot> slotList) {
+                               ArrayList<SelectableSlot> slotList) {
             super(context, textViewResourceId, slotList);
-            this.slotList = new ArrayList<Slot>();
+            this.slotList = new ArrayList<SelectableSlot>();
             this.slotList.addAll(slotList);
         }
 
@@ -239,11 +234,7 @@ public class DateTimePickerActivity extends Activity {
                 holder.name.setOnClickListener( new View.OnClickListener() {
                     public void onClick(View v) {
                         CheckBox cb = (CheckBox) v ;
-                        Slot slot = (Slot) cb.getTag();
-                        Toast.makeText(getApplicationContext(),
-                                "Clicked on Checkbox: " + cb.getText() +
-                                        " is " + cb.isChecked(),
-                                Toast.LENGTH_LONG).show();
+                        SelectableSlot slot = (SelectableSlot) cb.getTag();
                         slot.setSelected(cb.isChecked());
                     }
                 });
@@ -252,7 +243,7 @@ public class DateTimePickerActivity extends Activity {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            Slot slot = slotList.get(position);
+            SelectableSlot slot = slotList.get(position);
             holder.code.setText(" (" +  slot.getSlotDuration() + ")");
             holder.name.setText(slot.getStartTime());
             holder.name.setChecked(slot.isSelected());

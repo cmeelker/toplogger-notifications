@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("debugTag", "Back in Main");
 
         // Get our list from sharedPrefs
-        List<DesiredSlot>  desiredSlots = SharedPrefsHelper.getFromSharedPrefs(this);
+        List<DesiredSlot> desiredSlots = SharedPrefsHelper.getFromSharedPrefs(this);
 
         // Start the service which checks the API every x minutes
         Intent intent = new Intent(this, CheckSlotsService.class);
@@ -42,10 +42,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "sterk_channel";
-            String description = "sterk_channel";
+            CharSequence name = "roggelpot_channel";
+            String description = "roggelpot_channel";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("sterk_channel", name, importance);
+            NotificationChannel channel = new NotificationChannel("roggelpot_channel", name, importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
