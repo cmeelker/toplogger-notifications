@@ -1,141 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical"
-    android:padding="10dp">
+    >
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="361dp"
+        android:layout_height="280dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
+    <Button
+        android:id="@+id/button"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="20dp"
-        android:gravity="end"
-        android:orientation="horizontal">
+        android:layout_height="70dp"
+        android:background="@color/colorPrimaryDark"
+        android:drawableRight="@drawable/ic_logo_header_wide"
+        android:drawablePadding="20dp"
+        android:onClick="showTimePicker"
+        android:paddingRight="40dp"
+        android:text="@string/button_create"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="295dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="Add new notification"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textSize="24sp" />
+    <CalendarView
+        android:id="@+id/calendarView"
+        style="@android:style/Widget.DeviceDefault.CalendarView"
+        android:layout_width="0dp"
+        android:layout_height="331dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="313dp"
-
-        android:layout_height="50dp"
-        android:layout_margin="5dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/in_date"
-            android:layout_width="164dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/btn_date"
-            android:layout_width="106dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_toRightOf="@+id/in_date"
-            android:background="@drawable/round_corners"
-            android:baselineAligned="false"
-            android:padding="5dp"
-            android:text="SET DATE"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:typeface="normal"
-            app:layout_constraintStart_toEndOf="@+id/in_date"
-            app:layout_constraintTop_toTopOf="parent" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="5dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/in_time"
-            android:layout_width="164dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/in_date" />
-
-        <Button
-            android:id="@+id/btn_time"
-            android:layout_width="106dp"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/btn_date"
-            android:layout_alignStart="@+id/btn_date"
-            android:layout_alignLeft="@+id/btn_date"
-            android:layout_margin="5dp"
-            android:background="@drawable/round_corners"
-            android:padding="5dp"
-            android:text="SET TIME"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:typeface="normal"
-            app:layout_constraintStart_toEndOf="@+id/in_time"
-            app:layout_constraintTop_toBottomOf="@+id/btn_date" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="end"
-        android:orientation="horizontal">
+        android:layout_marginEnd="36dp"
+        android:layout_marginRight="36dp"
+        android:onClick="selectAll"
+        android:text="Select All"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="30dp"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:orientation="vertical">
-
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="?android:attr/listDivider" />
-
-            <Button
-                android:id="@+id/button5"
-                android:layout_width="130dp"
-                android:layout_height="55dp"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/transparent"
-                android:onClick="onCreateClick"
-                android:text="Confirm"
-                android:textColor="@color/colorPrimary"
-                android:textSize="24sp"
-                android:typeface="normal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</LinearLayout>
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="211dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginLeft="36dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+</androidx.constraintlayout.widget.ConstraintLayout>

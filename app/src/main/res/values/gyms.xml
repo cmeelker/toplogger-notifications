@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string-array name="gyms">
+    <item>Energiehaven - buiten</item>
+    <item>Energiehaven - binnen</item>
+    <item>Sterk</item>
+    <item>Rocky Steady Bussum</item>
+</string-array>
+</resources>

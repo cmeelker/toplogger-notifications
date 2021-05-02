@@ -17,15 +17,24 @@ abstract class Slot {
         this.end_date = end_date;
     }
 
-    public int getSlotDuration(){
+    public String getSlotDuration(){
         long diffInMillies = Math.abs(end_date.getTime() - start_date.getTime());
-        int diff = (int) TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-        return diff;
+        double total_minutes = (double) TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        int hours = (int) total_minutes/60;
+        int minutes = (int) total_minutes - (hours*60);
+        String duration = hours + " hour";
+        if (hours > 1){
+            duration += "s";
+        }
+        if (minutes > 0){
+            duration += " " + minutes + " minutes";
+        }
+        return duration;
     }
 
-    public String getStartTime(){
+    public String getTimeString(Date date){
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");      // 19:00
-        return dateFormat.format(start_date);
+        return dateFormat.format(date);
     }
 }
 
