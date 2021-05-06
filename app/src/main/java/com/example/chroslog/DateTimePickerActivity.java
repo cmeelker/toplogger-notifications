@@ -25,10 +25,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.baeldung.enums.values.Gym;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,12 +38,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class DateTimePickerActivity extends Activity {
 
     MyCustomAdapter dataAdapter = null;
     ArrayList<SelectableSlot> existingSlots = new ArrayList<SelectableSlot>();
-
+    Gym gym = Gym.Energiehaven_buiten;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,7 @@ public class DateTimePickerActivity extends Activity {
 
         // Create list of all slots that exists on that date
         existingSlots = listExistingSlots(calendar.getTime());
+
         displayListView();
 
         CalendarView calenderView = findViewById(R.id.calendarView);
@@ -71,17 +76,24 @@ public class DateTimePickerActivity extends Activity {
 
         // Set drop down menu for the gyms
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.gyms, android.R.layout.simple_spinner_item);
+        // Create an ArrayAdapter using the gym enum and a default spinner layout
+        ArrayAdapter<Gym> adapter = new ArrayAdapter<Gym>(this, android.R.layout.simple_spinner_item, Gym.values());
+        // ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.gyms, android.R.layout.simple_spinner_item);
+
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
+        // TO DO: USE THIS TO SET LAST USED/FAVOURITE GYM
+        // spinner.setSelection(3);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener () {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("debugTag", "selected gym: " + parent.getItemAtPosition(position));
+                gym = Gym.values()[position];
+                displayListView();
             }
 
             @Override
@@ -100,6 +112,10 @@ public class DateTimePickerActivity extends Activity {
         dataAdapter = new MyCustomAdapter(this,
                 R.layout.checkbox_item, existingSlots);
         ListView listView = (ListView) findViewById(R.id.listView);
+        TextView textView = (TextView) findViewById(R.id.empty);
+
+        // In case the list is empty show message
+        listView.setEmptyView(textView);
 
         // Assign adapter to ListView
         listView.setAdapter(dataAdapter);
@@ -107,7 +123,7 @@ public class DateTimePickerActivity extends Activity {
 
     private ArrayList<SelectableSlot> listExistingSlots(Date date){
         final ArrayList<SelectableSlot> existing_slots = new ArrayList<SelectableSlot>();
-        String url = APIHelper.create_api_url(date);
+        String url = APIHelper.create_api_url(date, gym);
 
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -136,7 +152,7 @@ public class DateTimePickerActivity extends Activity {
 
                                 if (password_required.equals("false") && start_date.after(now)) {
                                     // Create slot object and add to list
-                                    SelectableSlot new_slot = new SelectableSlot(start_date, end_date);
+                                    SelectableSlot new_slot = new SelectableSlot(start_date, end_date, gym);
                                     existing_slots.add(new_slot);
                                 } else {
                                     continue;
@@ -202,7 +218,7 @@ public class DateTimePickerActivity extends Activity {
     private void addNewDesiredSlots(ArrayList<SelectableSlot> selectedSlots){
         for(int i = 0; i< selectedSlots.size(); i++){
             SelectableSlot slot = selectedSlots.get(i);
-            DesiredSlot newEntry = new DesiredSlot(slot.start_date, slot.end_date);
+            DesiredSlot newEntry = new DesiredSlot(slot.start_date, slot.end_date, gym);
 
             // Get current list
             List<DesiredSlot> desiredSlots = SharedPrefsHelper.getFromSharedPrefs(this);

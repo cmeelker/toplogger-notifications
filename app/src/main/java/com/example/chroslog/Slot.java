@@ -2,6 +2,8 @@ package com.example.chroslog;
 
 import android.content.Context;
 
+import com.baeldung.enums.values.Gym;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,10 +13,12 @@ import java.util.concurrent.TimeUnit;
 abstract class Slot {
     Date start_date;
     Date end_date;
+    Gym gym;
 
-    public Slot(Date start_date, Date end_date) {
+    public Slot(Date start_date, Date end_date, Gym gym) {
         this.start_date = start_date;
         this.end_date = end_date;
+        this.gym = gym;
     }
 
     public String getSlotDuration(){
@@ -41,8 +45,8 @@ abstract class Slot {
 // Slot type that is used in our wish list of slots.
 class DesiredSlot extends Slot{
     boolean keepLooking = true;
-    public DesiredSlot(Date start_date, Date end_date) {
-        super(start_date, end_date);
+    public DesiredSlot(Date start_date, Date end_date, Gym gym) {
+        super(start_date, end_date, gym);
     }
 
     public static void deleteSlotFromSharedPrefs(Context context, int i){
@@ -61,8 +65,8 @@ class DesiredSlot extends Slot{
 class SelectableSlot extends Slot{
     boolean selected = false;
 
-    public SelectableSlot(Date start_date, Date end_date) {
-        super(start_date, end_date);
+    public SelectableSlot(Date start_date, Date end_date, Gym gym) {
+        super(start_date, end_date, gym);
     }
 
     public boolean isSelected() {

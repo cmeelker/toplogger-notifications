@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.baeldung.enums.values.Gym;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +32,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class CheckSlotsService extends Service {
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Intent notificationIntent = new Intent(this, CheckSlotsService.class);
@@ -83,7 +85,7 @@ public class CheckSlotsService extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "roggelpot_channel")
                 .setSmallIcon(R.drawable.mountain_icon)
-                .setContentTitle("Slot available at Energiehaven!")
+                .setContentTitle("Slot available at " + slot.gym.getName())
                 .setContentText(date_string)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(date_string))
@@ -97,7 +99,7 @@ public class CheckSlotsService extends Service {
 
     // Function checks how many slots are available, and then updates the DesiredSlot Object
     public void do_api_call(final Context context, final DesiredSlot slot, final int i){
-        String url = APIHelper.create_api_url(slot.start_date);
+        String url = APIHelper.create_api_url(slot.start_date, slot.gym);
         RequestQueue queue = Volley.newRequestQueue(context);
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest

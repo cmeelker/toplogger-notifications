@@ -8,6 +8,18 @@
     android:gravity="center"
     >
 
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:gravity="center"
+        android:text="There are no slots"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        tools:layout_editor_absoluteX="0dp" />
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="361dp"
@@ -33,7 +45,7 @@
         android:drawablePadding="20dp"
         android:onClick="showTimePicker"
         android:paddingRight="40dp"
-        android:text="@string/button_create"
+        android:text="CREATE NOTIFICATION"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -62,6 +74,7 @@
 
     <Spinner
         android:id="@+id/spinner"
+        style="@style/Widget.AppCompat.Spinner"
         android:layout_width="211dp"
         android:layout_height="47dp"
         android:layout_marginStart="36dp"

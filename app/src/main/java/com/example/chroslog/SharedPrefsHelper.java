@@ -72,7 +72,7 @@ public class SharedPrefsHelper {
             Calendar calendar = Calendar.getInstance();
             Date today_date = calendar.getTime();
 
-            if (today_date.after(slot.start_date)){
+             if (today_date.after(slot.start_date)){
                 desiredSlots.remove(i);
             }
         }
