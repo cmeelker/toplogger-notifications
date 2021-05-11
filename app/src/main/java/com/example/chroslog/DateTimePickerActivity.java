@@ -70,7 +70,10 @@ public class DateTimePickerActivity extends Activity {
                                                      calendar.set(year, month, dayOfMonth);
                                                      Log.d("debugTag", "selected date: " + calendar.getTime());
                                                      existingSlots = listExistingSlots(calendar.getTime());
+                                                     dataAdapter.notifyDataSetChanged();
+
                                                      displayListView();
+                                                     dataAdapter.notifyDataSetChanged();
                                                  }
                                              });
 
