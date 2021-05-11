@@ -6,9 +6,9 @@ public enum Gym {
     Energiehaven_buiten   ("Energiehaven - buiten", 11,67, R.mipmap.eh_outdoor),
     Sterk  ("Sterk", 20,4,  R.mipmap.sterk),
     Energiehaven_binnen("Energiehaven - Binnen", 11,15, R.mipmap.eh_indoor),
+    ZuidHaven("ZuidHaven",115, 72, R.mipmap.zuidhaven),
     Bussum ("Rock Steady Bussum", 28, 3, R.mipmap.bussum)
-
-    ; // semicolon needed when fields / methods follow
+    ;
 
     private final String name;
     private final int id;

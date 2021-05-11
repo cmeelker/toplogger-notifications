@@ -75,15 +75,13 @@ public class CustomListAdapterHome extends ArrayAdapter {
         int[] list = new int[slots.size()];
         for (int i = 0; i < slots.size(); i++){
             int image;
-            list[i] = slots.get(i).gym.getLogo();
-            // TO DO: ADD LOGOS with keeplooking asset
-//
-//            if (slots.get(i).keepLooking == true) {
-//                image = R.drawable.empty_check;
-//            } else {
-//                image = R.drawable.check;
-//            }
-//            list[i] = image;
+
+            if (slots.get(i).keepLooking == true) {
+                image = slots.get(i).gym.getLogo();
+            } else {
+                image = R.drawable.check;
+            }
+            list[i] = image;
         }
         return list;
     }
