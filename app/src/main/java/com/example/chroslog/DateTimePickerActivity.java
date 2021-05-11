@@ -16,7 +16,6 @@ import android.widget.CalendarView;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -30,7 +29,6 @@ import com.baeldung.enums.values.Gym;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,8 +36,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 public class DateTimePickerActivity extends Activity {
 
@@ -58,8 +54,10 @@ public class DateTimePickerActivity extends Activity {
         // Create list of all slots that exists on that date
         existingSlots = listExistingSlots(calendar.getTime());
 
-        displayListView();
+        // Create ListView
+        createListView();
 
+        // Create CalendarView
         CalendarView calenderView = findViewById(R.id.calendarView);
         calenderView.setMinDate(calendar.getTimeInMillis());
 
@@ -70,10 +68,7 @@ public class DateTimePickerActivity extends Activity {
                                                      calendar.set(year, month, dayOfMonth);
                                                      Log.d("debugTag", "selected date: " + calendar.getTime());
                                                      existingSlots = listExistingSlots(calendar.getTime());
-                                                     dataAdapter.notifyDataSetChanged();
-
-                                                     displayListView();
-                                                     dataAdapter.notifyDataSetChanged();
+                                                     createListView();
                                                  }
                                              });
 
@@ -96,7 +91,10 @@ public class DateTimePickerActivity extends Activity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("debugTag", "selected gym: " + parent.getItemAtPosition(position));
                 gym = Gym.values()[position];
-                displayListView();
+
+                // List slots for the new gym
+                existingSlots = listExistingSlots(calendar.getTime());
+                createListView();
             }
 
             @Override
@@ -108,9 +106,7 @@ public class DateTimePickerActivity extends Activity {
         createButtonClick();
     }
 
-
-
-    private void displayListView(){
+    private void createListView(){
         // Create an ArrayAdapter from the slots Array
         dataAdapter = new MyCustomAdapter(this,
                 R.layout.checkbox_item, existingSlots);
@@ -157,6 +153,10 @@ public class DateTimePickerActivity extends Activity {
                                     // Create slot object and add to list
                                     SelectableSlot new_slot = new SelectableSlot(start_date, end_date, gym);
                                     existing_slots.add(new_slot);
+
+                                    // Update the dataAdapter
+                                    dataAdapter.slotList = existing_slots;
+                                    dataAdapter.notifyDataSetChanged();
                                 } else {
                                     continue;
                                 }
@@ -193,7 +193,7 @@ public class DateTimePickerActivity extends Activity {
             slot.setSelected(true);
         }
 
-        displayListView();
+        createListView();
     }
 
     private void createButtonClick() {
